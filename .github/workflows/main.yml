@@ -1,0 +1,149 @@
+name: sync-code
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *'
+  watch:
+    types: started
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Init Build Dependencies
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo -E rm -rf /etc/apt/sources.list.d
+        sudo -E apt-get update -y
+        sudo -E apt-get install -y build-essential git git-core curl wget jq
+        sudo -E apt-get clean -y
+        git config --global user.name 'GitHub Actions' && git config --global user.email 'noreply@github.com'
+
+    - name: Get Code from Private Repository
+      run: |
+        mkdir -p ~/.ssh
+        echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com > ~/.ssh/known_hosts
+        git clone -b master https://github.com/whyour/qinglong.git master
+
+    - name: Push to master
+      run: |
+        echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com > ~/.ssh/known_hosts
+        cd master
+        git remote add github "${{ secrets.GITHUBREPO }}"
+        git push -u github master >/dev/null 2>&1
+
+    - name: Get Code from Private Repository
+      run: |
+        mkdir -p ~/.ssh
+        echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com > ~/.ssh/known_hosts
+        git clone -b develop https://github.com/whyour/qinglong.git develop
+
+    - name: Push to develop
+      run: |
+        echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com > ~/.ssh/known_hosts
+        cd develop
+        git remote add github "${{ secrets.GITHUBREPO }}"
+        git push -u github develop >/dev/null 2>&1
+
+    - name: Get Code from Private Repository
+      run: |
+        mkdir -p ~/.ssh
+        echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com > ~/.ssh/known_hosts
+        git clone -b pre https://github.com/whyour/qinglong.git pre
+
+    - name: Push to pre
+      run: |
+        echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com > ~/.ssh/known_hosts
+        cd pre
+        git remote add github "${{ secrets.GITHUBREPO }}"
+        git push -u github pre >/dev/null 2>&1
+
+    - name: Get Code from Private Repository
+      run: |
+        mkdir -p ~/.ssh
+        echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com > ~/.ssh/known_hosts
+        git clone -b test https://github.com/whyour/qinglong.git test
+
+    - name: Push to test
+      run: |
+        echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com > ~/.ssh/known_hosts
+        cd test
+        git remote add github "${{ secrets.GITHUBREPO }}"
+        git push -u github test >/dev/null 2>&1
+
+    - name: Get Code from Private Repository
+      run: |
+        mkdir -p ~/.ssh
+        echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com > ~/.ssh/known_hosts
+        git clone -b antd https://github.com/whyour/qinglong.git antd
+
+    - name: Push to antd
+      run: |
+        echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com > ~/.ssh/known_hosts
+        cd antd
+        git remote add github "${{ secrets.GITHUBREPO }}"
+        git push -u github antd >/dev/null 2>&1
+
+    - name: Get Code from Private Repository
+      run: |
+        mkdir -p ~/.ssh
+        echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com > ~/.ssh/known_hosts
+        git clone -b monorepo https://github.com/whyour/qinglong.git monorepo
+
+    - name: Push to monorepo
+      run: |
+        echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com > ~/.ssh/known_hosts
+        cd monorepo
+        git remote add github "${{ secrets.GITHUBREPO }}"
+        git push -u github monorepo >/dev/null 2>&1
+
+    - name: Get Code from Private Repository
+      run: |
+        mkdir -p ~/.ssh
+        echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com > ~/.ssh/known_hosts
+        git clone -b sqlite https://github.com/whyour/qinglong.git sqlite
+
+    - name: Push to sqlite
+      run: |
+        echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com > ~/.ssh/known_hosts
+        cd sqlite
+        git remote add github "${{ secrets.GITHUBREPO }}"
+        git push -u github sqlite >/dev/null 2>&1
+
+    - name: Delete Workflow Runs
+      uses: Mattraks/delete-workflow-runs@main
+      with:
+        token: ${{ github.token }}
+        repository: ${{ github.repository }}
+        retain_days: 1
+        keep_minimum_runs: 0
