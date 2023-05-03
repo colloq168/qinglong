@@ -61,57 +61,6 @@ jobs:
         echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan github.com > ~/.ssh/known_hosts
-        git clone -b pre https://github.com/whyour/qinglong.git pre
-
-    - name: Push to pre
-      run: |
-        echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan github.com > ~/.ssh/known_hosts
-        cd pre
-        git remote add github "${{ secrets.GITHUBREPO }}"
-        git push -u github pre >/dev/null 2>&1
-
-    - name: Get Code from Private Repository
-      run: |
-        mkdir -p ~/.ssh
-        echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan github.com > ~/.ssh/known_hosts
-        git clone -b test https://github.com/whyour/qinglong.git test
-
-    - name: Push to test
-      run: |
-        echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan github.com > ~/.ssh/known_hosts
-        cd test
-        git remote add github "${{ secrets.GITHUBREPO }}"
-        git push -u github test >/dev/null 2>&1
-
-    - name: Get Code from Private Repository
-      run: |
-        mkdir -p ~/.ssh
-        echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan github.com > ~/.ssh/known_hosts
-        git clone -b antd https://github.com/whyour/qinglong.git antd
-
-    - name: Push to antd
-      run: |
-        echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan github.com > ~/.ssh/known_hosts
-        cd antd
-        git remote add github "${{ secrets.GITHUBREPO }}"
-        git push -u github antd >/dev/null 2>&1
-
-    - name: Get Code from Private Repository
-      run: |
-        mkdir -p ~/.ssh
-        echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan github.com > ~/.ssh/known_hosts
         git clone -b monorepo https://github.com/whyour/qinglong.git monorepo
 
     - name: Push to monorepo
@@ -129,16 +78,16 @@ jobs:
         echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan github.com > ~/.ssh/known_hosts
-        git clone -b sqlite https://github.com/whyour/qinglong.git sqlite
+        git clone -b debian https://github.com/whyour/qinglong.git debian
 
-    - name: Push to sqlite
+    - name: Push to debian
       run: |
         echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan github.com > ~/.ssh/known_hosts
-        cd sqlite
+        cd debian
         git remote add github "${{ secrets.GITHUBREPO }}"
-        git push -u github sqlite >/dev/null 2>&1
+        git push -u github debian >/dev/null 2>&1
 
     - name: Delete Workflow Runs
       uses: Mattraks/delete-workflow-runs@main
